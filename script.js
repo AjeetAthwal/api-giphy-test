@@ -1,18 +1,36 @@
 const form = document.querySelector("#search-form");
+const btn = document.querySelector("#random-giphy");
 const img = document.querySelector("img");
 
-const baseUrl = "https://api.giphy.com/v1/gifs/translate?";
+const baseUrl = "https://api.giphy.com/v1/gifs/";
 
 const APIKey = "7jtL7ys5EbsJngKhvLEuz7QV8UPTfKZY";
-const APIExtension = "&api_key=" + APIKey;
+const APIExtension = "api_key=" + APIKey;
 
-const handleGiphy = (searchValue) => {
+const handleGiphyTranslate = (searchValue) => {
+  const translateUrl = baseUrl + "translate?";
   let locationSearch = "cats";
 
   if (searchValue !== undefined) locationSearch = searchValue;
-  const locationExtension = "s=" + locationSearch;
+  const locationExtension = "&s=" + locationSearch;
 
-  let url = baseUrl + locationExtension + APIExtension;
+  let url = translateUrl + locationExtension + APIExtension;
+
+  fetch(url, {
+    mode: "cors",
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (response) {
+      img.src = response.data.images.original.url;
+    });
+};
+
+const handleGiphyRandom = () => {
+  const translateUrl = baseUrl + "random?";
+
+  let url = translateUrl + APIExtension;
 
   fetch(url, {
     mode: "cors",
@@ -31,6 +49,9 @@ const handleForm = (e) => {
   handleGiphy(searchValue);
 };
 
-handleGiphy();
+
+handleGiphyRandom();
 
 form.addEventListener("submit", handleForm);
+
+btn.addEventListener("click", handleGiphyRandom);
