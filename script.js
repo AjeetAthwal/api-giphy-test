@@ -9,21 +9,23 @@ const APIExtension = "api_key=" + APIKey;
 
 const handleGiphyTranslate = (searchValue) => {
   const translateUrl = baseUrl + "translate?";
-  let locationSearch = "cats";
 
-  if (searchValue !== undefined) locationSearch = searchValue;
-  const locationExtension = "&s=" + locationSearch;
+  const locationExtension = "&s=" + searchValue;
 
-  let url = translateUrl + locationExtension + APIExtension;
+  let url = translateUrl + APIExtension + locationExtension;
 
   fetch(url, {
     mode: "cors",
   })
     .then(function (response) {
-      return response.json();
+      if (response.ok) return response.json();
+      else throw new Error("search fail");
     })
     .then(function (response) {
       img.src = response.data.images.original.url;
+    })
+    .catch(function (err) {
+      handleGiphyRandom();
     });
 };
 
@@ -46,9 +48,8 @@ const handleGiphyRandom = () => {
 const handleForm = (e) => {
   e.preventDefault();
   const searchValue = e.target.elements["search"].value;
-  handleGiphy(searchValue);
+  handleGiphyTranslate(searchValue);
 };
-
 
 handleGiphyRandom();
 
